@@ -31,20 +31,25 @@ typedef struct in_addr IN_ADDR;
 #endif
 #include <stdio.h>
 
+
+// UDP data structure
 typedef struct Udp {
     int sockfd;
     struct sockaddr_in servaddr;
 } Udp;
 
-
+// create an endpoint for communication
 void udp_init(Udp* udp);
 
 void udp_end(void);
 
+// send a message on a socket
 int udp_send(Udp* udp, char* ip, int port, char* message);
 
+// bind a name to a socket
 void udp_bind(Udp* udp, int port);
 
-void udp_recv(Udp* udp, char* buffer, int length);
+// receive a message from a socket
+int udp_recv(Udp* udp, char* buffer, int length);
 
 #endif
