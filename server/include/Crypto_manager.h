@@ -4,6 +4,7 @@
 #include <pthread.h>
 
 #include "../../common/include/Data.h"
+#include "../../common/include/Socket.h"
 
 // Minimum : 10
 #define TAB_START_SIZE 8
@@ -13,6 +14,8 @@ typedef struct
 {
     char ip[16];
     int port;
+    int running;
+    Udp udp_serv;
 }Thread_parameters;
 
 // Connection with A and B

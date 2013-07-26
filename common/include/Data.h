@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 // Data delimiter
-#define DELIM ","
+#define DELIM "|"
 
 // Data structure
 typedef struct Data {

@@ -8,7 +8,7 @@ void data_init(Data* data, char* sip, int sport, char* dip, int dport){
 }
 
 int data_encode(Data* data, char* target, int size){
-    return snprintf(target, size, "%s%s%i%s%s%s%i\n", data->sip, DELIM,  data->sport, DELIM, data->dip, DELIM,  data->dport);
+    return snprintf(target, size, "%s%s%i%s%s%s%i%s\n", data->sip, DELIM,  data->sport, DELIM, data->dip, DELIM,  data->dport, DELIM);
 }
 
 void data_decode(Data* data, char* src){
@@ -22,42 +22,43 @@ void data_decode(Data* data, char* src){
 
     char * pch;
 
-    pch = strtok (src, DELIM);
-    // printf ("sip %s\n", pch);
-    strcpy(data->sip, pch);
-
-    pch = strtok (NULL, DELIM);
-    // printf ("sport %i\n", atoi(pch));
-    data->sport = atoi(pch);
-
-    pch = strtok (NULL, DELIM);
-    // printf ("dip %s\n", pch);
-    strcpy(data->dip, pch);
-
-    pch = strtok (NULL, DELIM);
-    // printf ("dport %i\n", atoi(pch));
-    data->dport = atoi(pch);
-
-
-    // // sip
     // pch = strtok (src, DELIM);
-    // if(pch != NULL)
-    //     strcpy(data->sip, pch);
+    // // printf ("sip %s\n", pch);
+    // strcpy(data->sip, pch);
 
-    // // sport
     // pch = strtok (NULL, DELIM);
-    // if(pch != NULL)
-    //     data->sport = atoi(pch);
+    // // printf ("sport %i\n", atoi(pch));
+    // data->sport = atoi(pch);
 
-    // // dip
     // pch = strtok (NULL, DELIM);
-    // if(pch != NULL)
-    //     strcpy(data->dip, pch);
+    // // printf ("dip %s\n", pch);
+    // strcpy(data->dip, pch);
 
-    // // dport
     // pch = strtok (NULL, DELIM);
-    // if(pch != NULL)
-    //     data->dport = atoi(pch);
+    // // printf ("dport %i\n", atoi(pch));
+    // data->dport = atoi(pch);
+    //  printf ("dport %i\n", data->dport);
+
+
+    // sip
+    pch = strtok (src, DELIM);
+    if(pch != NULL)
+        strcpy(data->sip, pch);
+
+    // sport
+    pch = strtok (NULL, DELIM);
+    if(pch != NULL)
+        data->sport = atoi(pch);
+
+    // dip
+    pch = strtok (NULL, DELIM);
+    if(pch != NULL)
+        strcpy(data->dip, pch);
+
+    // dport
+    pch = strtok (NULL, DELIM);
+    if(pch != NULL)
+        data->dport = atoi(pch);
 }
 
 void data_print(Data* data){

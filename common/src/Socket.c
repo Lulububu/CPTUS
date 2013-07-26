@@ -24,6 +24,11 @@ void udp_end(void)
 #endif
 }
 
+void udp_close(Udp* udp)
+{
+    close(udp->sockfd);
+}
+
 int udp_send(Udp* udp, char* ip, int port, char* message){
     // Configure server address
     bzero(&(udp->servaddr),sizeof(udp->servaddr));

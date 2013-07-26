@@ -16,8 +16,22 @@ void cryptomanager_init(Crypto_manager* cm)
 void cryptomanager_destroy(Crypto_manager* cm)
 {
     // stop thread
+    int i;
+    for(i=0; i < cm->tab_pos; i++)
+    {
+        cm->tab_communications[i].client_A_param.running = 0;
+        cm->tab_communications[i].client_B_param.running = 0;
+
+        udp_close(&(cm->tab_communications[i].client_A_param.udp_serv));
+        udp_close(&(cm->tab_communications[i].client_B_param.udp_serv));
+    }
     
     // join thread
+    for(i=0; i < cm->tab_pos; i++)
+    {
+        // pthread_join(cm->tab_communications[i].client_A_thread, NULL);
+        // pthread_join(cm->tab_communications[i].client_B_thread, NULL);
+    }
 
     // free memory
     free(cm->tab_communications);
@@ -26,13 +40,16 @@ void cryptomanager_destroy(Crypto_manager* cm)
 void cryptomanager_add_connections(Crypto_manager* cm, Data* data)
 {
     Crypto_communication* comm = &(cm->tab_communications[cm->tab_pos]);
+    cm->tab_pos += 1;
 
     // complete parameters for the two threads
     strcpy(comm->client_A_param.ip, data->sip);
     comm->client_A_param.port = data->sport;
+    comm->client_A_param.running = 1;
 
     strcpy(comm->client_B_param.ip, data->dip);
     comm->client_B_param.port = data->dport;
+    comm->client_B_param.running = 1;
 
     // launch thread
     if(pthread_create(&(comm->client_A_thread), NULL, crypto, &(comm->client_A_param))) {
@@ -65,6 +82,31 @@ void *crypto(void *data)
     Thread_parameters param = *((Thread_parameters*)data);
 
     printf("Crypto on ip %s and port %i\n", param.ip, param.port);
+
+    udp_init(&(param.udp_serv));
+    udp_bind(&(param.udp_serv), param.port);
+    char msg_buffer[1000];
+    int size;
+
+    while(param.running == 1)
+    {
+        printf("Crypto on\n");
+        // receive a message from a socket
+        size = udp_recv(&(param.udp_serv), msg_buffer, 1000);
+        msg_buffer[size] = '\n';
+
+        if (size > 0)
+        {   
+            printf("Crypto on ip %s and port %i : %s\n", param.ip, param.port, msg_buffer);
+        }else
+        {
+            param.running = 0;
+        }
+    }
+
+    // Clean program
+    udp_close(&(param.udp_serv));
+    udp_end();
 
     // Crypto operations
 

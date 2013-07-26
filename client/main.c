@@ -24,23 +24,26 @@ int main(int argc, char**argv)
     
 
     // loop to send UDP packet on demand
-    char sip[80];
-    char dip[80];
+    char sip[80] = "clientA\0";
+    char dip[80] = "clientB\0";
     int sport;
-    int dport;
     int res;
     do {
         // get entry
-        printf ("S-IP S-PORT D-IP D-PORT : ");
-        res = scanf("%s %i %s %i", sip, &sport, dip, &dport);
+        printf ("PORT : ");
+        res = scanf("%i", &sport);
+        // printf ("D-PORT : ");
+        // res2 = scanf("%i",&dport);
 
-        if (res == 4)
+        if (res == 1)
         {
+            int dport = sport+1;
             // encode data
             data_init(&data, sip, sport, dip, dport);
             data_encode(&data, buffer, BUFFER_SIZE);
             // send packet
             udp_send(&udp_client, IP_ADDR, UDP_PORT, buffer);
+            printf("--->SEND %s %i %s %i\n", sip, sport, dip, dport);
         }else
             printf("Bad data !\n");
         

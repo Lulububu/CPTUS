@@ -43,6 +43,8 @@ void udp_init(Udp* udp);
 
 void udp_end(void);
 
+void udp_close(Udp* udp);
+
 // send a message on a socket
 int udp_send(Udp* udp, char* ip, int port, char* message);
 
