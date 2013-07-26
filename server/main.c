@@ -27,7 +27,7 @@ void sig_handler(int signo)
     if (signo == SIGINT)
     {
         RUNNING = 0;
-        udp_close(&udp_serv);
+        // udp_close(&udp_serv);
         printf("Stopping...\n");
     }
 }

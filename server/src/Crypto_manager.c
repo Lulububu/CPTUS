@@ -22,15 +22,15 @@ void cryptomanager_destroy(Crypto_manager* cm)
         cm->tab_communications[i].client_A_param.running = 0;
         cm->tab_communications[i].client_B_param.running = 0;
 
-        udp_close(&(cm->tab_communications[i].client_A_param.udp_serv));
-        udp_close(&(cm->tab_communications[i].client_B_param.udp_serv));
+        // udp_close(&(cm->tab_communications[i].client_A_param.udp_serv));
+        // udp_close(&(cm->tab_communications[i].client_B_param.udp_serv));
     }
     
     // join thread
     for(i=0; i < cm->tab_pos; i++)
     {
-        // pthread_join(cm->tab_communications[i].client_A_thread, NULL);
-        // pthread_join(cm->tab_communications[i].client_B_thread, NULL);
+        pthread_join(cm->tab_communications[i].client_A_thread, NULL);
+        pthread_join(cm->tab_communications[i].client_B_thread, NULL);
     }
 
     // free memory
@@ -79,32 +79,29 @@ void cryptomanager_check_tabsize(Crypto_manager* cm)
 
 void *crypto(void *data)
 {
-    Thread_parameters param = *((Thread_parameters*)data);
+    Thread_parameters *param = (Thread_parameters*)data;
 
-    printf("Crypto on ip %s and port %i\n", param.ip, param.port);
+    printf("Crypto on ip %s and port %i\n", param->ip, param->port);
 
-    udp_init(&(param.udp_serv));
-    udp_bind(&(param.udp_serv), param.port);
+    udp_init(&(param->udp_serv));
+    udp_bind(&(param->udp_serv), param->port);
     char msg_buffer[1000];
     int size;
 
-    while(param.running == 1)
+    while(param->running == 1)
     {
         // receive a message from a socket
-        size = udp_recv(&(param.udp_serv), msg_buffer, 1000);
+        size = udp_recv(&(param->udp_serv), msg_buffer, 1000);
         msg_buffer[size] = '\0';
 
         if (size > 0)
         {   
-            printf("Crypto on ip %s and port %i : %s\n", param.ip, param.port, msg_buffer);
-        }else
-        {
-            param.running = 0;
+            printf("Crypto on ip %s and port %i : %s\n", param->ip, param->port, msg_buffer);
         }
     }
-
+    printf("Crypto on ip %s and port %i - close\n", param->ip, param->port);
     // Clean program
-    udp_close(&(param.udp_serv));
+    udp_close(&(param->udp_serv));
     udp_end();
 
     // Crypto operations

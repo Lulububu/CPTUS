@@ -15,6 +15,16 @@ void udp_init(Udp* udp)
 #endif
     // create an endpoint for communication
     udp->sockfd = socket(AF_INET,SOCK_DGRAM,0);
+
+    struct timeval timeout;      
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+
+    if (setsockopt (udp->sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+        printf("setsockopt failed\n");
+
+    if (setsockopt (udp->sockfd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+        printf("setsockopt failed\n");
 }
 
 void udp_end(void)
