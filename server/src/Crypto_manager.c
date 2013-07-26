@@ -90,10 +90,9 @@ void *crypto(void *data)
 
     while(param.running == 1)
     {
-        printf("Crypto on\n");
         // receive a message from a socket
         size = udp_recv(&(param.udp_serv), msg_buffer, 1000);
-        msg_buffer[size] = '\n';
+        msg_buffer[size] = '\0';
 
         if (size > 0)
         {   
