@@ -20,14 +20,13 @@
 
 
 int RUNNING = 1;
-Udp udp_serv;
+
 
 void sig_handler(int signo)
 {
     if (signo == SIGINT)
     {
         RUNNING = 0;
-        // udp_close(&udp_serv);
         printf("Stopping...\n");
     }
 }
@@ -41,6 +40,7 @@ int main(int argc, char**argv)
         printf("\ncan't catch SIGINT\n");
     
     // UDP server initialization
+    Udp udp_serv;
     udp_init(&udp_serv);
     udp_bind(&udp_serv, UDP_PORT);
     char msg_buffer[BUFFER_SIZE];
