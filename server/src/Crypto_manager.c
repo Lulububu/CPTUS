@@ -15,6 +15,10 @@ void cryptomanager_init(Crypto_manager* cm)
 
 void cryptomanager_destroy(Crypto_manager* cm)
 {
+    // stop thread
+    
+    // join thread
+
     // free memory
     free(cm->tab_communications);
 }
